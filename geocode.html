@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0px; padding: 0px }
+      #map { height: 500px }
+    </style>
+
+    <script src="http://maps.google.com/maps/api/js?v=3&sensor=false"
+        type="text/javascript" charset="UTF-8"></script>
+
+    <script type="text/javascript">
+
+    var map;
+    var geo;
+    
+    // 地図の表示
+    function init() {
+      var latlng = new google.maps.LatLng(36, 138);
+      var opts = {
+        zoom: 5,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        center: latlng
+      };
+      map = new google.maps.Map(document.getElementById("map"), opts);
+      geo = new google.maps.Geocoder();
+    }
+
+	
+	// input住所→緯度経度
+    function buttonpress() {
+      var req = {
+//        address: document.getElementById("input").value,
+			'address': '福岡市箱崎'
+      };
+      geo.geocode(req, geoResultCallback);
+    }
+
+
+    function geoResultCallback(result, status) {
+      if (status != google.maps.GeocoderStatus.OK) {
+        alert(status);
+        return;
+      }
+      var latlng = result[0].geometry.location;
+      map.setCenter(latlng);
+      var marker = new google.maps.Marker({position:latlng, map:map, title:latlng.toString(), draggable:true});
+      google.maps.event.addListener(marker, 'dragend', function(event){
+        marker.setTitle(event.latLng.toString());
+      });
+      document.getElementById("latlngtext").innerHTML = document.getElementById("input").value + " : " + latlng.toString();
+    }
+
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="map"></div>
+    <div>菴乗園 : <input id="input" onsubmit="buttonpress()" /><input type="button" onclick="buttonpress()" value="邱ｯ蠎ｦ邨悟ｺｦ繧貞叙蠕" /></div>
+    <div id="latlngtext"></div>
+  </body>
+
+</html>

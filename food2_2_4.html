@@ -1,0 +1,71 @@
+<html lang="ja">
+<head>
+     <meta charset="utf-8">
+     <title>ご飯情報</title>
+     <script src="http://maps.google.com/maps/api/js?sensor=true&language=ja"></script>
+     <style>
+          #map {
+               width: 50%;
+               height: 80%;
+     </style>
+</head>
+<body>
+     <div id="map"></div>
+     <script>
+	     var latlng = new google.maps.LatLng(33.590239, 130.420622);
+    	 var options = {
+        	  zoom: 13,
+          	  center: latlng,
+          	  zoomControl: false, 
+           	  mapTypeid: google.maps.MapTypeId.ROADMAP
+ 	    };
+    	var map = new google.maps.Map(document.getElementById('map'), options);
+
+
+		// 以下、マーカーの表示
+		var geocoder = new google.maps.Geocoder();
+		
+
+		var array = ["福岡県福岡市中央区大名1-14-26", "福岡県福岡市中央区天神2-7-6 DADAビル　B1Ｆ", "福岡県福岡市中央区白金1-15-7 ダイヤパレス 1F", "福岡県福岡市南区大橋1-16-8 サザンハイツ大橋1F", "福岡県福岡市中央区大名1-9-23 大名ハーモニービル1Ｆ"];		
+		var array2 = ["Susu（大名）", "福蔵（天神）", "かわ屋（薬院）", "ワカミヤ食堂（大橋）", "小さな韓国アプロ（赤坂）"];
+		
+
+		for (var i=0; i<2; i++) {
+		geocoder.geocode({
+			'address': array[i]
+		}, function(result, status) {
+			if (status == google.maps.GeocoderStatus.OK) {		// geocodingがOKなら...
+
+			    // 情報ウインドウの表示
+     			var infoWindow = new google.maps.InfoWindow({
+       				content: array2[i]
+     			});
+
+
+				var latlng2 = result[0].geometry.location;
+				var marker = new google.maps.Marker ({
+					position: latlng2,
+					icon: new google.maps.MarkerImage('meshi_40.png'),		
+											// アイコンをデフォルトから変える。
+					title: 'ご飯ですよ！',		// アイコンにカーソル合わせると、メッセージ出る。
+					map: map
+				});
+				
+				// 以下で情報ウインドウとマーカーを連動させる
+     			google.maps.event.addListener(marker, 'click', function() {
+         			infoWindow.open(map, marker);
+     			});
+			} else {
+				alert('エラーです！');
+			}
+		});
+		}
+		
+
+
+
+
+
+     </script>
+</body>
+</html>
